@@ -1,0 +1,12 @@
+version: '3.9'
+
+services:
+  keycloak:
+    image: quay.io/keycloak/keycloak:latest
+    container_name: keycloak
+    environment:
+      - KEYCLOAK_ADMIN=admin             # Admin-Benutzername
+      - KEYCLOAK_ADMIN_PASSWORD=admin    # Admin-Passwort
+    ports:
+      - "8081:8080"                      # Keycloak auf Port 8081 verfügbar machen
+    command: start-dev                   # Start im Entwicklungsmodus
