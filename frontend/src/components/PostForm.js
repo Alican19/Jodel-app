@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { initializeKeycloak } from "../Keycloak";
+import '../themes/PostForm.css'
 
 const PostForm = () => {
   const [content, setContent] = useState("");
