@@ -7,9 +7,11 @@ body {
     padding: 0;
     background-color: #f4f4f9;
     display: flex;
+    flex-direction: column; /* Vertikale Anordnung */
     justify-content: center;
     align-items: center;
     height: 100vh;
+    box-sizing: border-box;
   }
   
   div {
@@ -19,8 +21,11 @@ body {
     background-color: #fff;
     border-radius: 8px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    box-sizing: border-box;
+    margin-bottom: 20px; /* Abstand zwischen Formular und Logout */
   }
   
+  /* Titel */
   h1 {
     font-size: 24px;
     color: #333;
@@ -83,6 +88,24 @@ body {
     background-color: #5a54e8;
   }
   
+  /* Logout-Button */
+  .logout-button {
+    width: 100%;
+    padding: 12px;
+    font-size: 16px;
+    background-color: #ff4d4d;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-top: 20px;
+  }
+  
+  .logout-button:hover {
+    background-color: #e03e3e;
+  }
+  
   /* Eingabefeld für Benutzermeldungen */
   input[type="text"] {
     width: 100%;
@@ -111,6 +134,10 @@ body {
     }
   
     button {
+      font-size: 14px;
+    }
+  
+    .logout-button {
       font-size: 14px;
     }
   }
