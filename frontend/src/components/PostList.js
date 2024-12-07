@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import '../themes/PostForm.css';  // Importiere das CSS
 
 const PostList = () => {
   const [posts, setPosts] = useState([]);
@@ -7,6 +8,7 @@ const PostList = () => {
   const [latitude, setLatitude] = useState(null);
   const [longitude, setLongitude] = useState(null);
   const [locationError, setLocationError] = useState(null);
+  const [newComment, setNewComment] = useState("");
 
   // Geolocation automatisch abrufen
   useEffect(() => {
@@ -47,13 +49,47 @@ const PostList = () => {
     }
   }, [latitude, longitude]); // Läuft, wenn die Position sich ändert
 
+  // Kommentare für einen Post laden
+  const loadComments = (postId) => {
+    axios
+      .get(`http://localhost:8080/posts/${postId}/comments`)
+      .then((response) => {
+        const updatedPosts = posts.map(post =>
+          post.id === postId ? { ...post, comments: response.data } : post
+        );
+        setPosts(updatedPosts);
+      })
+      .catch((err) => {
+        console.error("Error loading comments:", err);
+      });
+  };
+
+  // Kommentar für einen Post hinzufügen
+  const handleAddComment = (postId) => {
+    if (!newComment.trim()) return;
+
+    axios
+      .post(
+        `http://localhost:8080/posts/${postId}/comments`,
+        { content: newComment },
+      )
+      .then(() => {
+        setNewComment(""); // Kommentar-Feld leeren
+        loadComments(postId); // Kommentare neu laden
+      })
+      .catch((err) => {
+        console.error("Error posting comment:", err);
+        setError("Failed to post comment.");
+      });
+  };
+
   return (
     <div>
       <h1>Nearby Posts</h1>
-      {locationError && <p style={{ color: "red" }}>{locationError}</p>}
-      {error && <p style={{ color: "red" }}>{error}</p>}
+      {locationError && <p className="error">{locationError}</p>}
+      {error && <p className="error">{error}</p>}
       {!latitude || !longitude ? (
-        <p>Position wird ermittelt...</p>
+        <p className="loading">Position wird ermittelt...</p>
       ) : (
         <ul>
           {posts.map((post) => (
@@ -62,6 +98,26 @@ const PostList = () => {
               <small>
                 Posted by: {post.userId} at {post.latitude}, {post.longitude}
               </small>
+              <div>
+                <h3>Comments</h3>
+                <ul>
+                  {post.comments && post.comments.length > 0 ? (
+                    post.comments.map((comment, index) => (
+                      <li key={index}>{comment.content}</li>
+                    ))
+                  ) : (
+                    <p>No comments yet.</p>
+                  )}
+                </ul>
+                <textarea
+                  value={newComment}
+                  onChange={(e) => setNewComment(e.target.value)}
+                  placeholder="Add a comment"
+                ></textarea>
+                <button onClick={() => handleAddComment(post.id)}>
+                  Add Comment
+                </button>
+              </div>
             </li>
           ))}
         </ul>
