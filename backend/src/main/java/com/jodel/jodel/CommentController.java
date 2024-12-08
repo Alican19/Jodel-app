@@ -15,9 +15,11 @@ public class CommentController {
     }
 
     @PostMapping
-    public Comment addComment(@RequestBody Comment comment) {
-        return commentService.addComment(comment);
-    }
+    public Comment saveComment(@RequestBody Comment comment) {
+    System.out.println("Empfangene Daten: " + comment);
+    return commentService.saveComment(comment);
+}
+
 
     @GetMapping("/{postId}")
     public List<Comment> getCommentsByPostId(@PathVariable Long postId) {

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import CommentList from "./CommentList"; // Import der CommentList-Komponente
+import CommentList from "./CommentList";
 
 const PostList = () => {
   const [posts, setPosts] = useState([]);
@@ -8,7 +8,6 @@ const PostList = () => {
   const [latitude, setLatitude] = useState(null);
   const [longitude, setLongitude] = useState(null);
   const [locationError, setLocationError] = useState(null);
-  const [openComments, setOpenComments] = useState({}); // State für offene Kommentar-Sektionen
 
   useEffect(() => {
     if (navigator.geolocation) {
@@ -34,7 +33,7 @@ const PostList = () => {
           params: {
             latitude: latitude,
             longitude: longitude,
-            radius: 10000, // Radius in Metern
+            radius: 10000,
           },
         })
         .then((response) => {
@@ -46,14 +45,6 @@ const PostList = () => {
         });
     }
   }, [latitude, longitude]);
-
-  const toggleComments = (postId) => {
-    setOpenComments((prev) => ({
-      ...prev,
-      [postId]: !prev[postId],
-    }));
-  };
-
   return (
     <div>
       <h1>Nearby Posts</h1>
@@ -64,17 +55,12 @@ const PostList = () => {
       ) : (
         <ul>
           {posts.map((post) => (
-            <li key={post.id} style={{ marginBottom: "20px" }}>
+            <li key={post.id}>
               <p>{post.content}</p>
               <small>
-                Gepostet von: {post.userId} in {post.latitude}, {post.longitude}
+                Posted by: {post.userId} at {post.latitude}, {post.longitude}
               </small>
-              {/* Button zum Ein- und Ausklappen der Kommentare */}
-              <button onClick={() => toggleComments(post.id)}>
-                {openComments[post.id] ? "Kommentare ausblenden" : "Kommentare anzeigen"}
-              </button>
-              {/* Kommentar-Sektion anzeigen, wenn geöffnet */}
-              {openComments[post.id] && <CommentList postId={post.id} />}
+              <CommentList postId={post.id} />
             </li>
           ))}
         </ul>

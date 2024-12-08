@@ -20,4 +20,8 @@ public class CommentService {
     public List<Comment> getCommentsByPostId(Long postId) {
         return commentRepository.findByPostId(postId);
     }
+
+    public Comment saveComment(Comment comment) {
+    return commentRepository.save(comment);
+    }
 }
