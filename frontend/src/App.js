@@ -2,9 +2,11 @@ import React, { useState, useEffect } from "react";
 import PostList from "./components/PostList";
 import PostForm from "./components/PostForm";
 import LogoutButton from "./components/LogoutButton"; 
+import './styles.css';
 
 function App() {
   const [hasError, setHasError] = useState(false);
+  const [refreshTrigger, setRefreshTrigger] = useState(false); // Trigger to refresh posts
 
   useEffect(() => {
     const handleError = (error) => {
@@ -23,20 +25,22 @@ function App() {
     };
   }, []);
 
+  const handlePostCreated = () => {
+    setRefreshTrigger((prev) => !prev); // Toggle refresh trigger to update posts
+  };
+
   if (hasError) {
     return <div>Ein Fehler ist aufgetreten. Prüfe die Konsole.</div>;
   }
 
   return (
     <div>
-      <h1>Jodel App</h1>
-      {/* Formular zum Erstellen eines neuen Jodels */}
       <LogoutButton />
+      <h1>Jodel App</h1>
+      {/* PostForm with a callback to trigger post refresh */}
       <PostForm />
-      <PostList />
-
-      {/* Liste der Jodels */}
- 
+      {/* PostList listens for refreshTrigger */}
+      <PostList refreshTrigger={refreshTrigger} />
     </div>
   );
 }
